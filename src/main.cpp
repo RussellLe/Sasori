@@ -8,8 +8,8 @@ using namespace std;
 int main()
 {
 	std::vector<int> a = { 3,5,1,9,4,7,2,6,8 };
-	std::vector<int> output = mergeSort(a, 0, a.size() - 1, true);
-	int index = sequentialSearch<int>(output, 1);
+	std::vector<int> output = mergeSort(a, 0, a.size() - 1, false);
+	int index = interpolationSearch<int>(output, 6, 0, output.size() - 1, true);
 	for (int i = 0; i < output.size(); i++)
 	{
 		cout << output[i] << ' ';

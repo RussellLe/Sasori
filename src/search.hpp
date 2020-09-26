@@ -44,3 +44,35 @@ template <typename T> int binarySearch(const std::vector<T>& vec, T target, int 
 		}
 	}
 }
+
+template <typename T> int interpolationSearch(const std::vector<T>& vec, T target, int start, int end, bool maxFlag = true)
+{
+	int middle = start + (end - start) * (std::abs(target - vec[start])) / (std::abs(vec[end] - vec[start]));
+	if (vec[middle] == target)
+	{
+		return middle;
+	}
+
+	if (maxFlag)
+	{
+		if (vec[middle] > target)
+		{
+			return binarySearch(vec, target, middle + 1, end, maxFlag);
+		}
+		else
+		{
+			return binarySearch(vec, target, start, middle, maxFlag);
+		}
+	}
+	else
+	{
+		if (vec[middle] > target)
+		{
+			return binarySearch(vec, target, start, middle, maxFlag);
+		}
+		else
+		{
+			return binarySearch(vec, target, middle + 1, end, maxFlag);
+		}
+	}
+}
