@@ -20,5 +20,8 @@
     <ClInclude Include="src\linked_list.hpp">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\search.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
