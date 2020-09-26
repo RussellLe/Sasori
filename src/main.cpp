@@ -1,15 +1,15 @@
 #include <iostream>
-#include "sort.cpp"
+#include "sort.hpp"
 
 using namespace std;
 
 int main()
 {
 	std::vector<int> a = { 3,5,1,9,4,7,6 };
-	bool flag = bubbleSort<int>(a, false);
-	for (int i = 0; i < a.size(); i++)
+	std::vector<int> output = mergeSort<int>(a, 0, a.size() - 1, false);
+	for (int i = 0; i < output.size(); i++)
 	{
-		cout << a[i] << ' ';
+		cout << output[i] << ' ';
 	}
 	cout << endl;
 	return 0;

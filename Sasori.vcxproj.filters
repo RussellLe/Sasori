@@ -9,7 +9,7 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\sort.cpp">
+    <ClCompile Include="src\sort.hpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
