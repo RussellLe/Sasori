@@ -2,20 +2,26 @@
 #include "sort.hpp"
 #include "linked_list.hpp"
 #include "search.hpp"
+#include "binary_search_tree.hpp"
 
 using namespace std;
 
 int main()
 {
-	std::vector<int> a = { 3,5,1,9,4,7,2,6,8 };
-	std::vector<int> output = mergeSort(a, 0, a.size() - 1, false);
-	int index = interpolationSearch<int>(output, 6, 0, output.size() - 1, true);
+	BinarySearchTree<int> bst(7);
+	for (int i = 1; i <10; i++)
+	{
+		if (i != 7)
+		{
+			bst.addNode(i);
+		}
+	}
+	bst.deleteNode(7);
+	std::vector<int> output = bst.DLR();
 	for (int i = 0; i < output.size(); i++)
 	{
 		cout << output[i] << ' ';
 	}
 	cout << endl;
-	cout << index << endl;
-	cout << output[index] << endl;
 	return 0;
 }

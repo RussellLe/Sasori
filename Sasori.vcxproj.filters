@@ -23,5 +23,8 @@
     <ClInclude Include="src\search.hpp">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\binary_search_tree.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
