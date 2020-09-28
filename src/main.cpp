@@ -8,19 +8,11 @@ using namespace std;
 
 int main()
 {
-	BinarySearchTree<int> bst(7);
-	for (int i = 1; i <10; i++)
+	std::vector<int> a = { 3,5,1,9,6,2,7,4,8 };
+	quickSort<int>(a, 0, a.size() - 1, true);
+	for (int i = 0; i < a.size(); i++)
 	{
-		if (i != 7)
-		{
-			bst.addNode(i);
-		}
-	}
-	bst.deleteNode(7);
-	std::vector<int> output = bst.DLR();
-	for (int i = 0; i < output.size(); i++)
-	{
-		cout << output[i] << ' ';
+		cout << a[i] << ' ';
 	}
 	cout << endl;
 	return 0;

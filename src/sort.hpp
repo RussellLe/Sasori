@@ -122,3 +122,43 @@ template <typename T> std::vector<T> mergeSort(const std::vector<T>& vec, int st
 	}
 	return output;
 }
+
+
+template <typename T> void quickSort(std::vector<T>& vec, int begin, int end, bool maxFlag = true)
+{
+	if (begin < end)
+	{
+		T pivot = vec[end];
+
+		int i = begin - 1;
+		for (int j = begin; j < end; j++)
+		{
+			if (!maxFlag)
+			{
+				if (vec[j] < pivot)
+				{
+					i++;
+					int swapTmp = vec[j];
+					vec[j] = vec[i];
+					vec[i] = swapTmp;
+				}
+			}
+			else
+			{
+				if (vec[j] > pivot)
+				{
+					i++;
+					int swapTmp = vec[j];
+					vec[j] = vec[i];
+					vec[i] = swapTmp;
+				}
+			}
+		}
+		int pivotIndex = i + 1;
+		vec.insert(vec.begin() + pivotIndex, vec[end]);
+		vec.erase(vec.begin() + end + 1);
+
+		quickSort(vec, begin, pivotIndex - 1, maxFlag);
+		quickSort(vec, pivotIndex + 1, end, maxFlag);
+	}
+}
