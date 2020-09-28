@@ -24,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\binary_search_tree.hpp" />
+    <ClInclude Include="src\heap.hpp" />
     <ClInclude Include="src\linked_list.hpp" />
     <ClInclude Include="src\search.hpp" />
     <ClInclude Include="src\stdafx.h" />

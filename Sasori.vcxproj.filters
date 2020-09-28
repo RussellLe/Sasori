@@ -26,5 +26,8 @@
     <ClInclude Include="src\binary_search_tree.hpp">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\heap.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
