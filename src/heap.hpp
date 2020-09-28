@@ -13,6 +13,9 @@ public:
 	bool addElement(T value);
 	bool buildMaxHeap();
 	bool buildMinHeap();
+	bool isEmpty();
+	T getRootElement();
+	bool eraseRootElement();
 public:
 	bool maxHeapify_(int index);
 	bool minHeapify_(int index);
@@ -39,6 +42,22 @@ template <typename T> bool BinaryHeap<T>::buildMinHeap()
 	{
 		minHeapify_(i);
 	}
+	return true;
+}
+
+template <typename T> bool BinaryHeap<T>::isEmpty()
+{
+	return heapContainer.empty();
+}
+
+template <typename T> T BinaryHeap<T>::getRootElement()
+{
+	return heapContainer[0];
+}
+
+template <typename T> bool BinaryHeap<T>::eraseRootElement()
+{
+	heapContainer.erase(heapContainer.begin());
 	return true;
 }
 

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-
+#include "heap.hpp"
 
 template <typename T> bool bubbleSort(std::vector<T> &vec, bool maxFlag = true)
 {
@@ -161,4 +161,30 @@ template <typename T> void quickSort(std::vector<T>& vec, int begin, int end, bo
 		quickSort(vec, begin, pivotIndex - 1, maxFlag);
 		quickSort(vec, pivotIndex + 1, end, maxFlag);
 	}
+}
+
+template <typename T> std::vector<T> heapSort(std::vector<T> vec, bool maxFlag = true)
+{
+	std::vector<T> output;
+
+	BinaryHeap<T> heap;
+	for (auto iter = vec.begin(); iter < vec.end(); iter++)
+	{
+		heap.addElement(*iter);
+	}
+
+	while (!heap.isEmpty())
+	{
+		if (maxFlag)
+		{
+			heap.buildMaxHeap();
+		}
+		else
+		{
+			heap.buildMinHeap();
+		}
+		output.push_back(heap.getRootElement());
+		heap.eraseRootElement();
+	}
+	return output;
 }
