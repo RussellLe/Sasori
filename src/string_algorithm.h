@@ -2,4 +2,6 @@
 #include "stdafx.h"
 
 
-int kmpFindStr(std::string baseStr, std::string targetStr);
+int kmp(std::string baseStr, std::string targetStr);
+
+std::pair<std::string, std::vector<int>> manacher(std::string baseStr);

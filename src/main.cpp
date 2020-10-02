@@ -9,7 +9,16 @@ using namespace std;
 
 int main()
 {
-	int f=kmpFindStr("helloworld", "worl");
-	cout << f << endl;
+	auto output=manacher("ababa");
+	for (int i = 0; i < output.first.size(); i++)
+	{
+		cout << output.first[i] << ' ';
+	}
+	cout << endl;
+	for (int i = 0; i < output.second.size(); i++)
+	{
+		cout << output.second[i] << ' ';
+	}
+	cout << endl;
 	return 0;
 }

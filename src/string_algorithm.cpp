@@ -1,7 +1,7 @@
 #include "string_algorithm.h"
 
 
-int kmpFindStr(std::string baseStr, std::string targetStr)
+int kmp(std::string baseStr, std::string targetStr)
 {
 	std::vector<int> partialTable;
 	partialTable.resize(targetStr.size());
@@ -47,4 +47,45 @@ int kmpFindStr(std::string baseStr, std::string targetStr)
 		}
 	}
 	return -1;
+}
+
+std::pair<std::string, std::vector<int>> manacher(std::string baseStr)
+{
+	std::vector<int> output;
+
+	const char splitToken = '#';
+	for (int i = 0; i < baseStr.size(); i++)
+	{
+		baseStr.insert(i, 1, splitToken);
+		i++;
+	}
+	baseStr.insert(baseStr.size(), 1, splitToken);
+	output.resize(baseStr.size());
+
+	int mx = 0, mid = 0;
+	output[0] = 0;
+	for (int i = 1; i < baseStr.size(); i++)
+	{
+		if (i < mx)
+		{
+			output[i] = std::min(output[2 * mid - i], mx - i);
+		}
+		else
+		{
+			output[i] = 1;
+		}
+
+		while (i - output[i] >= 0 && baseStr[i - output[i]] == baseStr[i + output[i]])
+		{
+			output[i]++;
+		}
+		if (i + output[i] > mx)
+		{
+			mx = i + output[i];
+			mid = i;
+		}
+	}
+
+	std::pair<std::string, std::vector<int>> outputPair(baseStr, output);
+	return outputPair;
 }
