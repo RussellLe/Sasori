@@ -22,6 +22,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\sort.hpp" />
     <ClCompile Include="src\string_algorithm.cpp" />
+    <ClCompile Include="src\trie.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\binary_search_tree.hpp" />
@@ -30,6 +31,7 @@
     <ClInclude Include="src\search.hpp" />
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\string_algorithm.h" />
+    <ClInclude Include="src\trie.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

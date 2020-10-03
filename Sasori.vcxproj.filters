@@ -15,6 +15,9 @@
     <ClCompile Include="src\string_algorithm.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\trie.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\stdafx.h">
@@ -33,6 +36,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\string_algorithm.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\trie.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
