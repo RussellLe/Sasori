@@ -19,12 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\automaton.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\sort.hpp" />
     <ClCompile Include="src\string_algorithm.cpp" />
     <ClCompile Include="src\trie.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\automaton.h" />
     <ClInclude Include="src\binary_search_tree.hpp" />
     <ClInclude Include="src\heap.hpp" />
     <ClInclude Include="src\linked_list.hpp" />

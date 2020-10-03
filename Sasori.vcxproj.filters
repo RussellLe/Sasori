@@ -18,6 +18,9 @@
     <ClCompile Include="src\trie.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\automaton.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\stdafx.h">
@@ -39,6 +42,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\trie.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\automaton.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
