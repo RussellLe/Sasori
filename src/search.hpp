@@ -76,3 +76,37 @@ template <typename T> int interpolationSearch(const std::vector<T>& vec, T targe
 		}
 	}
 }
+
+template <typename T> int thirdsSearch(const std::vector<T>& vec, int left, int right, bool maxFlag = true)
+{
+	if (right - left <= 1)
+	{
+		return left;
+	}
+
+	int middleLeft = (left + right) / 2;
+	int middleRight = (middleLeft + right) / 2;
+	
+	if (maxFlag)
+	{
+		if (vec[middleLeft] > vec[middleRight])
+		{
+			return thirdsSearch(vec, left, middleRight, maxFlag);
+		}
+		else
+		{
+			return thirdsSearch(vec, middleLeft, right, maxFlag);
+		}
+	}
+	else
+	{
+		if (vec[middleLeft] < vec[middleRight])
+		{
+			return thirdsSearch(vec, left, middleRight, maxFlag);
+		}
+		else
+		{
+			return thirdsSearch(vec, middleLeft, right, maxFlag);
+		}
+	}
+}
