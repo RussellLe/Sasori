@@ -58,6 +58,12 @@ template <typename T> bool BinarySearchTree<T>::addNode(T value)
 {
 	std::shared_ptr<TreeNode<T>> newNode = std::make_shared<TreeNode<T>>(value);
 	std::shared_ptr<TreeNode<T>> ergodicCursor = findLeaf_(value, root);
+
+	if (ergodicCursor == nullptr)
+	{
+		return false;
+	}
+
 	if (ergodicCursor->value < value)
 	{
 		ergodicCursor->rightPtr = newNode;
@@ -96,13 +102,17 @@ template <typename T> std::shared_ptr<TreeNode<T>> BinarySearchTree<T>::findLeaf
 		}
 		return findLeaf_(value, ergodicCursor->rightPtr);
 	}
-	else
+	else if (ergodicCursor->value > value)
 	{
 		if (ergodicCursor->leftPtr == nullptr)
 		{
 			return ergodicCursor;
 		}
 		return findLeaf_(value, ergodicCursor->leftPtr);
+	}
+	else
+	{
+		return nullptr;
 	}
 }
 
