@@ -7,25 +7,25 @@
 #include "trie.h"
 #include "automaton.h"
 #include "scapegoat_tree.hpp"
+#include "disjoint_set.hpp"
 
 using namespace std;
 
 int main()
 {
-	ScapegoatTree<int> st1(3, 0.6);
+	DisjointSet<int> ds;
 	for (int i = 1; i < 100; i++)
 	{
-		st1.addNode(i);
+		ds.addElement(i);
 	}
-	std::vector<int> output = st1.DLR ();
-	for (int i = 0; i < output.size(); i++)
-	{
-		cout << output[i] << ' ';
-	}
-	cout << endl;
-	cout << st1.isBalance(st1.root) << endl;
-	cout << st1.root->size << endl;
-	cout << st1.root->leftPtr->size << endl;
-	cout << st1.root->rightPtr->size << endl;
+	ds.merge(3, 5);
+	ds.merge(6, 7);
+	ds.merge(1, 2);
+	ds.merge(1, 3);
+	cout << ds.isJoined(1, 4) << endl;
+	cout << ds.isJoined(2, 5) << endl;
+	cout << ds.isJoined(1, 6) << endl;
+	ds.merge(3, 6);
+	cout << ds.isJoined(1, 6) << endl;
 	return 0;
 }

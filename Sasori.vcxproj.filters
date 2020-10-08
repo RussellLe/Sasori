@@ -56,12 +56,18 @@
     <ClInclude Include="src\scapegoat_tree.hpp">
       <Filter>src\tree</Filter>
     </ClInclude>
+    <ClInclude Include="src\disjoint_set.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="document\AC自动机.txt">
       <Filter>document</Filter>
     </Text>
     <Text Include="document\三分查找.txt">
+      <Filter>document</Filter>
+    </Text>
+    <Text Include="document\替罪羊树.txt">
       <Filter>document</Filter>
     </Text>
   </ItemGroup>

@@ -28,6 +28,7 @@
   <ItemGroup>
     <ClInclude Include="src\automaton.h" />
     <ClInclude Include="src\binary_search_tree.hpp" />
+    <ClInclude Include="src\disjoint_set.hpp" />
     <ClInclude Include="src\heap.hpp" />
     <ClInclude Include="src\linked_list.hpp" />
     <ClInclude Include="src\scapegoat_tree.hpp" />
@@ -39,6 +40,7 @@
   <ItemGroup>
     <Text Include="document\AC自动机.txt" />
     <Text Include="document\三分查找.txt" />
+    <Text Include="document\替罪羊树.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
