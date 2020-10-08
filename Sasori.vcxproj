@@ -30,10 +30,15 @@
     <ClInclude Include="src\binary_search_tree.hpp" />
     <ClInclude Include="src\heap.hpp" />
     <ClInclude Include="src\linked_list.hpp" />
+    <ClInclude Include="src\scapegoat_tree.hpp" />
     <ClInclude Include="src\search.hpp" />
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\string_algorithm.h" />
     <ClInclude Include="src\trie.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="document\AC自动机.txt" />
+    <Text Include="document\三分查找.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
