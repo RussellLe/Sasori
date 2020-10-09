@@ -166,14 +166,19 @@ template <typename T> std::vector<T> ScapegoatTree<T>::LRD()
 
 template <typename T> bool ScapegoatTree<T>::deleteNode(T value)
 {
-	
+	auto deleteCursor = findNode_(value, root);
+	deleteCursor->isDelete = true;
 	return true;
 }
 
 
 template <typename T> void ScapegoatTree<T>::DLR_(std::vector<T>& vec, std::shared_ptr<ScapegoatTreeNode<T>> ergodicCursor)
 {
-	vec.push_back(ergodicCursor->value);
+	if (!ergodicCursor->isDelete)
+	{
+		vec.push_back(ergodicCursor->value);
+	}
+
 	if (ergodicCursor->leftPtr != nullptr)
 	{
 		DLR_(vec, ergodicCursor->leftPtr);
@@ -190,7 +195,12 @@ template <typename T> void ScapegoatTree<T>::LDR_(std::vector<T>& vec, std::shar
 	{
 		LDR_(vec, ergodicCursor->leftPtr);
 	}
-	vec.push_back(ergodicCursor->value);
+
+	if (!ergodicCursor->isDelete)
+	{
+		vec.push_back(ergodicCursor->value);
+	}
+
 	if (ergodicCursor->rightPtr != nullptr)
 	{
 		LDR_(vec, ergodicCursor->rightPtr);
@@ -207,7 +217,11 @@ template <typename T> void ScapegoatTree<T>::LRD_(std::vector<T>& vec, std::shar
 	{
 		LRD_(vec, ergodicCursor->rightPtr);
 	}
-	vec.push_back(ergodicCursor->value);
+
+	if (!ergodicCursor->isDelete)
+	{
+		vec.push_back(ergodicCursor->value);
+	}
 }
 
 template <typename T> void ScapegoatTree<T>::updatePathSize_(std::shared_ptr<ScapegoatTreeNode<T>> leafCursor, std::shared_ptr<ScapegoatTreeNode<T>> rootCursor)

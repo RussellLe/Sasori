@@ -13,19 +13,20 @@ using namespace std;
 
 int main()
 {
-	DisjointSet<int> ds;
+	ScapegoatTree<int> sgt(3);
 	for (int i = 1; i < 100; i++)
 	{
-		ds.addElement(i);
+		sgt.addNode(i);
+		if (i >= 10 && i % 5 == 0)
+		{
+			sgt.deleteNode(i - 5);
+		}
 	}
-	ds.merge(3, 5);
-	ds.merge(6, 7);
-	ds.merge(1, 2);
-	ds.merge(1, 3);
-	cout << ds.isJoined(1, 4) << endl;
-	cout << ds.isJoined(2, 5) << endl;
-	cout << ds.isJoined(1, 6) << endl;
-	ds.merge(3, 6);
-	cout << ds.isJoined(1, 6) << endl;
+	auto output = sgt.DLR();
+	for (int i = 0; i < output.size(); i++)
+	{
+		cout << output[i] << ' ';
+	}
+	cout << endl;
 	return 0;
 }

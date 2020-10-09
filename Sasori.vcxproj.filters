@@ -70,5 +70,8 @@
     <Text Include="document\替罪羊树.txt">
       <Filter>document</Filter>
     </Text>
+    <Text Include="document\并查集.txt">
+      <Filter>document</Filter>
+    </Text>
   </ItemGroup>
 </Project>

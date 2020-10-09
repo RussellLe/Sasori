@@ -40,6 +40,7 @@
   <ItemGroup>
     <Text Include="document\AC自动机.txt" />
     <Text Include="document\三分查找.txt" />
+    <Text Include="document\并查集.txt" />
     <Text Include="document\替罪羊树.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
