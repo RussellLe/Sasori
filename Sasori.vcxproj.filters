@@ -59,6 +59,9 @@
     <ClInclude Include="src\disjoint_set.hpp">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\segment_tree.hpp">
+      <Filter>src\tree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="document\AC自动机.txt">

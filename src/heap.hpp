@@ -1,8 +1,5 @@
 #include "stdafx.h"
 
-#define left(n) 2*n+1
-#define right(n) 2*n+2
-
 
 template <typename T> class BinaryHeap
 {

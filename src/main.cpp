@@ -8,25 +8,14 @@
 #include "automaton.h"
 #include "scapegoat_tree.hpp"
 #include "disjoint_set.hpp"
+#include "segment_tree.hpp"
 
 using namespace std;
 
 int main()
 {
-	ScapegoatTree<int> sgt(3);
-	for (int i = 1; i < 100; i++)
-	{
-		sgt.addNode(i);
-		if (i >= 10 && i % 5 == 0)
-		{
-			sgt.deleteNode(i - 5);
-		}
-	}
-	auto output = sgt.DLR();
-	for (int i = 0; i < output.size(); i++)
-	{
-		cout << output[i] << ' ';
-	}
-	cout << endl;
+	std::vector<int> initVec = { 3,7,9,1,6,2,5,8 };
+	SegmentTree<int> smt(initVec);
+	smt.add(1, 1, 5);
 	return 0;
 }
