@@ -10,6 +10,9 @@
     <Filter Include="document">
       <UniqueIdentifier>{ca764432-1773-41a8-be22-6baa3c80ea36}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\graph">
+      <UniqueIdentifier>{cfdefd88-6590-4c72-be1a-c97f506a20e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -61,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="src\segment_tree.hpp">
       <Filter>src\tree</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graph.hpp">
+      <Filter>src\graph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
