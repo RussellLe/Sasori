@@ -12,6 +12,7 @@ public:
 	bool addLink(T startPoint, T endPoint);
 	bool unLink(T startPoint, T endPoint);
 	bool addTwowayLink(T firstPoint, T secondPoint);
+	std::vector<T> bfs(T startPoint);
 };
 
 template <typename T> LinkedGraph<T>::LinkedGraph()
@@ -80,4 +81,32 @@ template <typename T> bool LinkedGraph<T>::addTwowayLink(T firstPoint, T secondP
 		secondIter->second->addNode(firstPoint);
 	}
 	return true;
+}
+
+template <typename T> std::vector<T> LinkedGraph<T>::bfs(T startPoint)
+{
+	std::vector<T> output;
+	std::map<T, bool> visitTable;
+
+	std::queue<std::shared_ptr<LinkedList<T>>> q;
+	q.push(startPointContainer[startPoint]);
+	visitTable.insert(std::pair<T, bool>(startPoint, true));
+	while (!q.empty())
+	{
+		auto nowNodeLink = q.front();
+		q.pop();
+		auto allLinkValues = nowNodeLink->getAllElement();
+		output.push_back(allLinkValues[0]);
+		for (int i = 1; i < allLinkValues.size(); i++)
+		{
+			auto isVisitIter = visitTable.find(allLinkValues[i]);
+			if (isVisitIter != visitTable.end() && isVisitIter->second)
+			{
+				continue;
+			}
+			q.push(startPointContainer[allLinkValues[i]]);
+			visitTable.insert(std::pair<T, bool>(allLinkValues[i], true));
+		}
+	}
+	return output;
 }

@@ -34,6 +34,7 @@ public:
 	bool insertNode(T value, int index);
 	bool updateNodeValue(T value, int index);
 	bool isNodeExist(T value);
+	T getValueByIndex(int index);
 	std::vector<T> getAllElement();
 
 protected:
@@ -183,4 +184,9 @@ template <typename T> bool LinkedList<T>::isNodeExist(T value)
 		return false;
 	}
 	return true;
+}
+
+template <typename T> T LinkedList<T>::getValueByIndex(int index)
+{
+	return getNodeByIndex_(index)->value;
 }

@@ -20,10 +20,14 @@ int main()
 	{
 		g.addPoint(i);
 	}
-	g.addTwowayLink(1, 3);
-	g.addTwowayLink(1, 7);
-	g.addTwowayLink(1, 4);
-	auto output = g.startPointContainer[1]->getAllElement();
+	g.addLink(1, 3);
+	g.addLink(1, 7);
+	g.addLink(1, 4);
+	g.addLink(4, 8);
+	g.addLink(7, 9);
+	g.addLink(3, 8);
+	g.addLink(8, 5);
+	auto output = g.bfs(1);
 	for (int i = 0; i < output.size(); i++)
 	{
 		cout << output[i] << ' ';
