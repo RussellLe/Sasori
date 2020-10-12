@@ -33,6 +33,7 @@ public:
 	bool deleteNodeByIndex(int index);
 	bool insertNode(T value, int index);
 	bool updateNodeValue(T value, int index);
+	bool isNodeExist(T value);
 	std::vector<T> getAllElement();
 
 protected:
@@ -172,5 +173,14 @@ template <typename T> bool LinkedList<T>::updateNodeValue(T value, int index)
 	}
 
 	ergodicCursor->value = value;
+	return true;
+}
+
+template <typename T> bool LinkedList<T>::isNodeExist(T value)
+{
+	if (getNodeByValue_(value) == nullptr)
+	{
+		return false;
+	}
 	return true;
 }

@@ -11,6 +11,7 @@ public:
 	bool addPoint(T point);
 	bool addLink(T startPoint, T endPoint);
 	bool unLink(T startPoint, T endPoint);
+	bool addTwowayLink(T firstPoint, T secondPoint);
 };
 
 template <typename T> LinkedGraph<T>::LinkedGraph()
@@ -40,6 +41,10 @@ template <typename T> bool LinkedGraph<T>::addLink(T startPoint, T endPoint)
 	{
 		return false;
 	}
+	if (startIter->second->isNodeExist(endPoint))
+	{
+		return false;
+	}
 
 	startIter->second->addNode(endPoint);
 	return true;
@@ -54,5 +59,25 @@ template <typename T> bool LinkedGraph<T>::unLink(T startPoint, T endPoint)
 	}
 
 	startIter->second->deleteNodeByValue(endPoint);
+	return true;
+}
+
+template <typename T> bool LinkedGraph<T>::addTwowayLink(T firstPoint, T secondPoint)
+{
+	auto firstIter = startPointContainer.find(firstPoint);
+	auto secondIter = startPointContainer.find(secondPoint);
+	if (firstIter == startPointContainer.end() || secondIter == startPointContainer.end())
+	{
+		return false;
+	}
+
+	if (!firstIter->second->isNodeExist(secondPoint))
+	{
+		firstIter->second->addNode(secondPoint);
+	}
+	if (!secondIter->second->isNodeExist(firstPoint))
+	{
+		secondIter->second->addNode(firstPoint);
+	}
 	return true;
 }

@@ -20,10 +20,9 @@ int main()
 	{
 		g.addPoint(i);
 	}
-	g.addLink(1, 3);
-	g.addLink(1, 4);
-	g.addLink(1, 7);
-	g.unLink(1, 4);
+	g.addTwowayLink(1, 3);
+	g.addTwowayLink(1, 7);
+	g.addTwowayLink(1, 4);
 	auto output = g.startPointContainer[1]->getAllElement();
 	for (int i = 0; i < output.size(); i++)
 	{
