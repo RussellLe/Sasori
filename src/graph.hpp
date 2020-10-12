@@ -13,6 +13,10 @@ public:
 	bool unLink(T startPoint, T endPoint);
 	bool addTwowayLink(T firstPoint, T secondPoint);
 	std::vector<T> bfs(T startPoint);
+	std::vector<T> dfs(T startPoint);
+
+protected:
+	void dfs_(T nextPoint, std::vector<T>& output, std::map<T, bool>& visitTable);
 };
 
 template <typename T> LinkedGraph<T>::LinkedGraph()
@@ -109,4 +113,30 @@ template <typename T> std::vector<T> LinkedGraph<T>::bfs(T startPoint)
 		}
 	}
 	return output;
+}
+
+template <typename T> std::vector<T> LinkedGraph<T>::dfs(T startPoint)
+{
+	std::vector<T> output;
+	std::map<T, bool> visitTable;
+	dfs_(startPoint, output, visitTable);
+	return output;
+}
+
+template <typename T> void LinkedGraph<T>::dfs_(T nextPoint, std::vector<T>& output, std::map<T, bool>& visitTable)
+{
+	auto isVisitIter = visitTable.find(nextPoint);
+	if (isVisitIter != visitTable.end() && isVisitIter->second)
+	{
+		return;
+	}
+
+	output.push_back(nextPoint);
+	visitTable.insert(std::pair<T, bool>(nextPoint, true));
+	auto nowNodeLink = startPointContainer[nextPoint];
+	auto allLinkValues = nowNodeLink->getAllElement();
+	for (int i = 1; i < allLinkValues.size(); i++)
+	{
+		dfs_(allLinkValues[i], output, visitTable);
+	}
 }

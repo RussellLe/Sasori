@@ -27,7 +27,7 @@ int main()
 	g.addLink(7, 9);
 	g.addLink(3, 8);
 	g.addLink(8, 5);
-	auto output = g.bfs(1);
+	auto output = g.dfs(1);
 	for (int i = 0; i < output.size(); i++)
 	{
 		cout << output[i] << ' ';
