@@ -14,6 +14,11 @@ public:
 	bool addTwowayLink(T firstPoint, T secondPoint);
 	std::vector<T> bfs(T startPoint);
 	std::vector<T> dfs(T startPoint);
+	std::vector<T> topologicalSort();
+
+public:
+	std::map<T, int> incomeTable;
+	std::map<T, int> outTable;
 
 protected:
 	void dfs_(T nextPoint, std::vector<T>& output, std::map<T, bool>& visitTable);
@@ -32,6 +37,8 @@ template <typename T> bool LinkedGraph<T>::addPoint(T point)
 		return false;
 	}
 	startPointContainer[point] = std::make_shared<LinkedList<T>>(point);
+	incomeTable.insert(std::pair<T, int>(point, 0));
+	outTable.insert(std::pair<T, int>(point, 0));
 	return true;
 }
 
@@ -52,6 +59,8 @@ template <typename T> bool LinkedGraph<T>::addLink(T startPoint, T endPoint)
 	}
 
 	startIter->second->addNode(endPoint);
+	incomeTable[endPoint] += 1;
+	outTable[startPoint] += 1;
 	return true;
 }
 
@@ -64,6 +73,8 @@ template <typename T> bool LinkedGraph<T>::unLink(T startPoint, T endPoint)
 	}
 
 	startIter->second->deleteNodeByValue(endPoint);
+	incomeTable[endPoint] -= 1;
+	outTable[startPoint] -= 1;
 	return true;
 }
 
@@ -79,10 +90,14 @@ template <typename T> bool LinkedGraph<T>::addTwowayLink(T firstPoint, T secondP
 	if (!firstIter->second->isNodeExist(secondPoint))
 	{
 		firstIter->second->addNode(secondPoint);
+		incomeTable[secondPoint] += 1;
+		outTable[firstPoint] += 1;
 	}
 	if (!secondIter->second->isNodeExist(firstPoint))
 	{
 		secondIter->second->addNode(firstPoint);
+		incomeTable[firstPoint] += 1;
+		outTable[secondPoint] += 1;
 	}
 	return true;
 }
@@ -120,6 +135,38 @@ template <typename T> std::vector<T> LinkedGraph<T>::dfs(T startPoint)
 	std::vector<T> output;
 	std::map<T, bool> visitTable;
 	dfs_(startPoint, output, visitTable);
+	return output;
+}
+
+template <typename T> std::vector<T> LinkedGraph<T>::topologicalSort()
+{
+	std::vector<T> output;
+	auto incomeTableCopy = incomeTable;
+	std::queue<T> noIncomeNodes;
+	for (auto iter = incomeTableCopy.begin(); iter != incomeTableCopy.end(); iter++)
+	{
+		if (iter->second == 0)
+		{
+			noIncomeNodes.push(iter->first);
+		}
+	}
+
+	while (!noIncomeNodes.empty())
+	{
+		T nowNode = noIncomeNodes.front();
+		noIncomeNodes.pop();
+		output.push_back(nowNode);
+		
+		auto allLinkValues = startPointContainer[nowNode]->getAllElement();
+		for (int i = 1; i < allLinkValues.size(); i++)
+		{
+			incomeTableCopy[allLinkValues[i]]--;
+			if (incomeTableCopy[allLinkValues[i]] == 0)
+			{
+				noIncomeNodes.push(allLinkValues[i]);
+			}
+		}
+	}
 	return output;
 }
 

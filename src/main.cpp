@@ -16,9 +16,11 @@ using namespace std;
 int main()
 {
 	LinkedGraph<int> g;
-	for (int i = 1; i < 10; i++)
+
+	vector<int> points = { 1,2,3,4,5,7,8,9 };
+	for (int i = 0; i < points.size(); i++)
 	{
-		g.addPoint(i);
+		g.addPoint(points[i]);
 	}
 	g.addLink(1, 3);
 	g.addLink(1, 7);
@@ -27,7 +29,9 @@ int main()
 	g.addLink(7, 9);
 	g.addLink(3, 8);
 	g.addLink(8, 5);
-	auto output = g.dfs(1);
+	g.addLink(2, 3);
+	g.addLink(7, 8);
+	auto output = g.topologicalSort();
 	for (int i = 0; i < output.size(); i++)
 	{
 		cout << output[i] << ' ';
