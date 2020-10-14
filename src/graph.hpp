@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "linked_list.hpp"
+#include "disjoint_set.hpp"
 
 template <typename T> class LinkedGraph
 {
@@ -9,16 +10,18 @@ public:
 public:
 	LinkedGraph();
 	bool addPoint(T point);
-	bool addLink(T startPoint, T endPoint);
+	bool addLink(T startPoint, T endPoint, int weight = 0);
 	bool unLink(T startPoint, T endPoint);
-	bool addTwowayLink(T firstPoint, T secondPoint);
+	bool addTwowayLink(T firstPoint, T secondPoint, int weight = 0);
 	std::vector<T> bfs(T startPoint);
 	std::vector<T> dfs(T startPoint);
 	std::vector<T> topologicalSort();
+	std::vector<std::pair<std::pair<T, T>, int>> miniSpanningTree();
 
-public:
+protected:
 	std::map<T, int> incomeTable;
 	std::map<T, int> outTable;
+	std::map<std::pair<T, T>, int> edgeWeightTable;
 
 protected:
 	void dfs_(T nextPoint, std::vector<T>& output, std::map<T, bool>& visitTable);
@@ -42,7 +45,7 @@ template <typename T> bool LinkedGraph<T>::addPoint(T point)
 	return true;
 }
 
-template <typename T> bool LinkedGraph<T>::addLink(T startPoint, T endPoint)
+template <typename T> bool LinkedGraph<T>::addLink(T startPoint, T endPoint, int weight)
 {
 	auto startIter = startPointContainer.find(startPoint);
 	if (startIter == startPointContainer.end())
@@ -61,6 +64,9 @@ template <typename T> bool LinkedGraph<T>::addLink(T startPoint, T endPoint)
 	startIter->second->addNode(endPoint);
 	incomeTable[endPoint] += 1;
 	outTable[startPoint] += 1;
+
+	std::pair<T, T> edgePointPair(startPoint, endPoint);
+	edgeWeightTable[edgePointPair] = weight;
 	return true;
 }
 
@@ -75,10 +81,13 @@ template <typename T> bool LinkedGraph<T>::unLink(T startPoint, T endPoint)
 	startIter->second->deleteNodeByValue(endPoint);
 	incomeTable[endPoint] -= 1;
 	outTable[startPoint] -= 1;
+
+	std::pair<T, T> edgePointPair(startPoint, endPoint);
+	edgeWeightTable.erase(edgePointPair);
 	return true;
 }
 
-template <typename T> bool LinkedGraph<T>::addTwowayLink(T firstPoint, T secondPoint)
+template <typename T> bool LinkedGraph<T>::addTwowayLink(T firstPoint, T secondPoint, int weight)
 {
 	auto firstIter = startPointContainer.find(firstPoint);
 	auto secondIter = startPointContainer.find(secondPoint);
@@ -92,12 +101,18 @@ template <typename T> bool LinkedGraph<T>::addTwowayLink(T firstPoint, T secondP
 		firstIter->second->addNode(secondPoint);
 		incomeTable[secondPoint] += 1;
 		outTable[firstPoint] += 1;
+
+		std::pair<T, T> edgePointPair(firstPoint, secondPoint);
+		edgeWeightTable[edgePointPair] = weight;
 	}
 	if (!secondIter->second->isNodeExist(firstPoint))
 	{
 		secondIter->second->addNode(firstPoint);
 		incomeTable[firstPoint] += 1;
 		outTable[secondPoint] += 1;
+
+		std::pair<T, T> edgePointPair(secondPoint, firstPoint);
+		edgeWeightTable[edgePointPair] = -1 * weight;
 	}
 	return true;
 }
@@ -165,6 +180,67 @@ template <typename T> std::vector<T> LinkedGraph<T>::topologicalSort()
 			{
 				noIncomeNodes.push(allLinkValues[i]);
 			}
+		}
+	}
+	return output;
+}
+
+template <typename T> std::vector<std::pair<std::pair<T, T>, int>> LinkedGraph<T>::miniSpanningTree()
+{
+	std::vector<std::pair<std::pair<T, T>, int>> output;
+
+	std::vector<std::pair<std::pair<T, T>, int>> sortedEdges;
+	for (auto iter = edgeWeightTable.begin(); iter != edgeWeightTable.end(); iter++)
+	{
+		if (iter->second > 0)
+		{
+			std::pair<std::pair<T, T>, int> edgePair(iter->first, iter->second);
+			if (sortedEdges.empty())
+			{
+				sortedEdges.push_back(edgePair);
+				continue;
+			}
+
+			bool isInsert = false;
+			for (int i = 0; i < sortedEdges.size(); i++)
+			{
+				if (sortedEdges[i].second > edgePair.second)
+				{
+					isInsert = true;
+					sortedEdges.insert(sortedEdges.begin() + i, edgePair);
+					break;
+				}
+			}
+
+			if (!isInsert)
+			{
+				sortedEdges.push_back(edgePair);
+			}
+		}
+	}
+
+	DisjointSet<T> disjointSet;
+	int pointCount = 0;
+	for (auto iter = startPointContainer.begin(); iter != startPointContainer.end(); iter++)
+	{
+		disjointSet.addElement(iter->first);
+		pointCount++;
+	}
+	
+	for (int i = 0; i < sortedEdges.size(); i++)
+	{
+		auto nowEdge = sortedEdges[i];
+		T startPoint = nowEdge.first.first;
+		T endPoint = nowEdge.first.second;
+		if (!disjointSet.isJoined(startPoint, endPoint))
+		{
+			output.push_back(nowEdge);
+			disjointSet.merge(startPoint, endPoint);
+		}
+		
+		if (output.size() >= pointCount - 1)
+		{
+			break;
 		}
 	}
 	return output;

@@ -6,7 +6,6 @@
 #include "trie.h"
 #include "automaton.h"
 #include "scapegoat_tree.hpp"
-#include "disjoint_set.hpp"
 #include "segment_tree.hpp"
 #include "graph.hpp"
 
@@ -15,26 +14,31 @@ using namespace std;
 
 int main()
 {
-	LinkedGraph<int> g;
+	LinkedGraph<char> g;
 
-	vector<int> points = { 1,2,3,4,5,7,8,9 };
+	vector<char> points = { 'a','b','c','d','e','f','g','h','i' };
 	for (int i = 0; i < points.size(); i++)
 	{
 		g.addPoint(points[i]);
 	}
-	g.addLink(1, 3);
-	g.addLink(1, 7);
-	g.addLink(1, 4);
-	g.addLink(4, 8);
-	g.addLink(7, 9);
-	g.addLink(3, 8);
-	g.addLink(8, 5);
-	g.addLink(2, 3);
-	g.addLink(7, 8);
-	auto output = g.topologicalSort();
+	g.addTwowayLink('a','b',4);
+	g.addTwowayLink('a', 'h',8);
+	g.addTwowayLink('b','h',11);
+	g.addTwowayLink('b','c',8);
+	g.addTwowayLink('h','i',7);
+	g.addTwowayLink('c','i',2);
+	g.addTwowayLink('h','g',1);
+	g.addTwowayLink('i','g',6);
+	g.addTwowayLink('g','f',2);
+	g.addTwowayLink('c', 'f', 4);
+	g.addTwowayLink('c', 'd', 7);
+	g.addTwowayLink('d', 'f', 14);
+	g.addTwowayLink('d', 'e', 9);
+	g.addTwowayLink('f', 'e', 10);
+	auto output = g.miniSpanningTree();
 	for (int i = 0; i < output.size(); i++)
 	{
-		cout << output[i] << ' ';
+		cout << output[i].first.first << " to " <<output[i].first.second<<"   " <<output[i].second << endl;
 	}
 	cout << endl;
 	return 0;
