@@ -30,6 +30,7 @@
     <ClCompile Include="src\trie.cpp">
       <Filter>src\tree</Filter>
     </ClCompile>
+    <ClCompile Include="Readme" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\stdafx.h">

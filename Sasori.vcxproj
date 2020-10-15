@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Readme" />
     <ClCompile Include="src\automaton.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\sort.hpp" />
