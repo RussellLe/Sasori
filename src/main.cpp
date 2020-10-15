@@ -16,29 +16,30 @@ int main()
 {
 	LinkedGraph<char> g;
 
-	vector<char> points = { 'a','b','c','d','e','f','g','h','i' };
+	vector<char> points = { 'a','b','c','d','e','f','g' };
 	for (int i = 0; i < points.size(); i++)
 	{
 		g.addPoint(points[i]);
 	}
-	g.addTwowayLink('a','b',4);
-	g.addTwowayLink('a', 'h',8);
-	g.addTwowayLink('b','h',11);
-	g.addTwowayLink('b','c',8);
-	g.addTwowayLink('h','i',7);
-	g.addTwowayLink('c','i',2);
-	g.addTwowayLink('h','g',1);
-	g.addTwowayLink('i','g',6);
-	g.addTwowayLink('g','f',2);
-	g.addTwowayLink('c', 'f', 4);
-	g.addTwowayLink('c', 'd', 7);
-	g.addTwowayLink('d', 'f', 14);
-	g.addTwowayLink('d', 'e', 9);
-	g.addTwowayLink('f', 'e', 10);
-	auto output = g.miniSpanningTree();
-	for (int i = 0; i < output.size(); i++)
+	g.addLink('a','b',5);
+	g.addLink('a', 'c',2);
+	g.addLink('b','d',1);
+	g.addLink('b','e',6);
+	g.addLink('c','d',6);
+	g.addLink('c','f',8);
+	g.addLink('d','e',1);
+	g.addLink('d','f',2);
+	g.addLink('e','g',7);
+	g.addLink('f', 'g', 3);
+	auto output = g.dijkstraPath('a');
+	for (auto iter = output.begin(); iter != output.end(); iter++)
 	{
-		cout << output[i].first.first << " to " <<output[i].first.second<<"   " <<output[i].second << endl;
+		cout << iter->first << "     ";
+		for (int i = 0; i < iter->second.second.size(); i++)
+		{
+			cout << iter->second.second[i] << ' ';
+		}
+		cout << "    " << iter->second.first << endl;
 	}
 	cout << endl;
 	return 0;

@@ -17,6 +17,7 @@ public:
 	std::vector<T> dfs(T startPoint);
 	std::vector<T> topologicalSort();
 	std::vector<std::pair<std::pair<T, T>, int>> miniSpanningTree();
+	std::map<T, std::pair<int, std::vector<T>>> dijkstraPath(T startPoint);
 
 protected:
 	std::map<T, int> incomeTable;
@@ -241,6 +242,57 @@ template <typename T> std::vector<std::pair<std::pair<T, T>, int>> LinkedGraph<T
 		if (output.size() >= pointCount - 1)
 		{
 			break;
+		}
+	}
+	return output;
+}
+
+template <typename T> std::map<T, std::pair<int, std::vector<T>>> LinkedGraph<T>::dijkstraPath(T startPoint)
+{
+	std::map<T, std::pair<int, std::vector<T>>> output;
+	
+	for (auto iter = startPointContainer.begin(); iter != startPointContainer.end(); iter++)
+	{
+		std::vector<T> vecTmp;
+		if (iter->first == startPoint)
+		{
+			std::pair<int, std::vector<T>> pairTmp(0, vecTmp);
+			output[iter->first] = pairTmp;
+		}
+		else
+		{
+			std::pair<int, std::vector<T>> pairTmp(INT_MAX, vecTmp);
+			output[iter->first] = pairTmp;
+		}
+	}
+
+	std::queue<std::pair<T, std::vector<T>>> q;
+
+	std::vector<T> originPath;
+	originPath.push_back(startPoint);
+	std::pair<T, std::vector<T>> startPointPair(startPoint, originPath);
+	q.push(startPointPair);
+	while (!q.empty())
+	{
+		auto nowPoint = q.front();
+		q.pop();
+		auto allLinkPoints = startPointContainer[nowPoint.first]->getAllElement();
+		for (int i = 1; i < allLinkPoints.size(); i++)
+		{
+			T nextPoint = allLinkPoints[i];
+			std::pair<T, T> edgePair(nowPoint.first, nextPoint);
+			int weight = edgeWeightTable[edgePair] + output[nowPoint.first].first;
+			if (weight > output[nextPoint].first)
+			{
+				continue;
+			}
+
+			std::vector<T> path(nowPoint.second);
+			path.push_back(nextPoint);
+			output[nextPoint].first = weight;
+			output[nextPoint].second = path;
+			std::pair<T, std::vector<T>> nextPointPair(nextPoint, path);
+			q.push(nextPointPair);
 		}
 	}
 	return output;
