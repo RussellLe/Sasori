@@ -18,6 +18,7 @@ public:
 	std::vector<T> topologicalSort();
 	std::vector<std::pair<std::pair<T, T>, int>> miniSpanningTree();
 	std::map<T, std::pair<int, std::vector<T>>> dijkstraPath(T startPoint);
+	std::vector<T> bidirectionalSearch(T startPoint, T endPoint);
 
 protected:
 	std::map<T, int> incomeTable;
@@ -294,6 +295,116 @@ template <typename T> std::map<T, std::pair<int, std::vector<T>>> LinkedGraph<T>
 			std::pair<T, std::vector<T>> nextPointPair(nextPoint, path);
 			q.push(nextPointPair);
 		}
+	}
+	return output;
+}
+
+template <typename T> std::vector<T> LinkedGraph<T>::bidirectionalSearch(T startPoint, T endPoint)
+{
+	const int startFlag = 1;
+	const int endFlag = 2;
+
+	std::vector<T> output;
+	std::map<T, std::pair<int, T>> visitTable;	//first:flag(1,2)      second:pre node
+	
+	std::queue<T> q1;
+	std::queue<T> q2;
+	q1.push(startPoint);
+	q2.push(endPoint);
+
+	std::pair<int, T> pair1(startFlag, startPoint);
+	std::pair<int, T> pair2(endFlag, endPoint);
+	visitTable[startPoint] = pair1;
+	visitTable[endPoint] = pair2;
+	
+	T intersectPoint;
+	T backwardPoint;
+	while (true)
+	{
+		bool breakFlag = false;
+		if (!q1.empty())
+		{
+			T nowPoint = q1.front();
+			q1.pop();
+			std::vector<T> allLinkPoints = startPointContainer[nowPoint]->getAllElement();
+			for (int i = 1; i < allLinkPoints.size(); i++)
+			{
+				T nextPoint = allLinkPoints[i];
+				auto visitIter = visitTable.find(nextPoint);
+				if (visitIter != visitTable.end())
+				{
+					if (visitIter->second.first != startFlag)
+					{
+						intersectPoint = nextPoint;
+						backwardPoint = nowPoint;
+						breakFlag = true;
+					}
+					continue;
+				}
+				
+				q1.push(nextPoint);
+				std::pair<int, T> pairTmp(startFlag, nowPoint);
+				visitTable[nextPoint] = pairTmp;
+			}
+			if (breakFlag)
+			{
+				break;
+			}
+		}
+
+		if (!q2.empty())
+		{
+			T nowPoint = q2.front();
+			q2.pop();
+			std::vector<T> allLinkPoints = startPointContainer[nowPoint]->getAllElement();
+			for (int i = 1; i < allLinkPoints.size(); i++)
+			{
+				T nextPoint = allLinkPoints[i];
+				auto visitIter = visitTable.find(nextPoint);
+				if (visitIter != visitTable.end())
+				{
+					if (visitIter->second.first != endFlag)
+					{
+						intersectPoint = nextPoint;
+						backwardPoint = nowPoint;
+						breakFlag = true;
+					}
+					continue;
+				}
+
+				q2.push(nextPoint);
+				std::pair<int, T> pairTmp(endFlag, nowPoint);
+				visitTable[nextPoint] = pairTmp;
+			}
+			if (breakFlag)
+			{
+				break;
+			}
+		}
+	}
+	std::stack<T> s1;
+	while (true)
+	{
+		s1.push(backwardPoint);
+		if (backwardPoint == visitTable[backwardPoint].second)
+		{
+			break;
+		}
+		backwardPoint = visitTable[backwardPoint].second;
+	}
+	while (!s1.empty())
+	{
+		output.push_back(s1.top());
+		s1.pop();
+	}
+	while (true)
+	{
+		output.push_back(intersectPoint);
+		if (intersectPoint == visitTable[intersectPoint].second)
+		{
+			break;
+		}
+		intersectPoint = visitTable[intersectPoint].second;
 	}
 	return output;
 }

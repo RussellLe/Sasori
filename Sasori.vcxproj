@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Readme" />
     <ClCompile Include="src\automaton.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\sort.hpp" />
@@ -45,6 +44,7 @@
     <Text Include="document\三分查找.txt" />
     <Text Include="document\并查集.txt" />
     <Text Include="document\替罪羊树.txt" />
+    <Text Include="Readme" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -30,7 +30,6 @@
     <ClCompile Include="src\trie.cpp">
       <Filter>src\tree</Filter>
     </ClCompile>
-    <ClCompile Include="Readme" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\stdafx.h">
@@ -83,5 +82,6 @@
     <Text Include="document\并查集.txt">
       <Filter>document</Filter>
     </Text>
+    <Text Include="Readme" />
   </ItemGroup>
 </Project>

@@ -14,32 +14,30 @@ using namespace std;
 
 int main()
 {
-	LinkedGraph<char> g;
+	LinkedGraph<int> g;
 
-	vector<char> points = { 'a','b','c','d','e','f','g' };
-	for (int i = 0; i < points.size(); i++)
+	for (int i = 0; i < 15; i++)
 	{
-		g.addPoint(points[i]);
+		g.addPoint(i);
 	}
-	g.addLink('a','b',5);
-	g.addLink('a', 'c',2);
-	g.addLink('b','d',1);
-	g.addLink('b','e',6);
-	g.addLink('c','d',6);
-	g.addLink('c','f',8);
-	g.addLink('d','e',1);
-	g.addLink('d','f',2);
-	g.addLink('e','g',7);
-	g.addLink('f', 'g', 3);
-	auto output = g.dijkstraPath('a');
-	for (auto iter = output.begin(); iter != output.end(); iter++)
+	g.addTwowayLink(0, 4);
+	g.addTwowayLink(1, 4);
+	g.addTwowayLink(2, 5);
+	g.addTwowayLink(3, 5);
+	g.addTwowayLink(4, 6);
+	g.addTwowayLink(5, 6);
+	g.addTwowayLink(6, 7);
+	g.addTwowayLink(7, 8);
+	g.addTwowayLink(8, 9);
+	g.addTwowayLink(8, 10);
+	g.addTwowayLink(9, 11);
+	g.addTwowayLink(9, 12);
+	g.addTwowayLink(10, 13);
+	g.addTwowayLink(10, 14);
+	auto output=g.bidirectionalSearch(0,14);
+	for (int i = 0; i < output.size(); i++)
 	{
-		cout << iter->first << "     ";
-		for (int i = 0; i < iter->second.second.size(); i++)
-		{
-			cout << iter->second.second[i] << ' ';
-		}
-		cout << "    " << iter->second.first << endl;
+		cout << output[i] << ' ';
 	}
 	cout << endl;
 	return 0;
