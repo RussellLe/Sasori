@@ -19,7 +19,7 @@ public:
 	std::vector<std::pair<std::pair<T, T>, int>> miniSpanningTree();
 	std::map<T, std::pair<int, std::vector<T>>> dijkstraPath(T startPoint);
 	std::vector<T> bidirectionalSearch(T startPoint, T endPoint);
-	std::pair<int, std::vector<T>> heuristicSearch(T startPoint, T endPoint, double alpha = 0.8);
+	std::pair<int, std::vector<T>> heuristicSearch(T startPoint, T endPoint, double alpha = 3);
 
 protected:
 	std::map<T, int> incomeTable;
@@ -28,7 +28,7 @@ protected:
 
 public:
 	void dfs_(T nextPoint, std::vector<T>& output, std::map<T, bool>& visitTable);
-	std::map<std::pair<T, T>, int> getMultiSourceCost_(double alpha = 1);
+	std::map<std::pair<T, T>, int> getMultiSourceCost_(double alpha = 3);
 	int geometryTriangleCost_(int costFirst, int costSecond, double alpha);
 };
 
