@@ -19,6 +19,7 @@ public:
 	std::vector<std::pair<std::pair<T, T>, int>> miniSpanningTree();
 	std::map<T, std::pair<int, std::vector<T>>> dijkstraPath(T startPoint);
 	std::vector<T> bidirectionalSearch(T startPoint, T endPoint);
+	std::pair<int, std::vector<T>> heuristicSearch(T startPoint, T endPoint, double alpha = 0.8);
 
 protected:
 	std::map<T, int> incomeTable;
@@ -27,7 +28,7 @@ protected:
 
 public:
 	void dfs_(T nextPoint, std::vector<T>& output, std::map<T, bool>& visitTable);
-	std::map<std::pair<T, T>, int> getMultiSourceCost_(double alpha = 0.8);
+	std::map<std::pair<T, T>, int> getMultiSourceCost_(double alpha = 1);
 	int geometryTriangleCost_(int costFirst, int costSecond, double alpha);
 };
 
@@ -112,8 +113,8 @@ template <typename T> bool LinkedGraph<T>::addTwowayLink(T firstPoint, T secondP
 	if (!secondIter->second->isNodeExist(firstPoint))
 	{
 		secondIter->second->addNode(firstPoint);
-		incomeTable[firstPoint] += 1;
-		outTable[secondPoint] += 1;
+		//incomeTable[firstPoint] += 1;
+		//outTable[secondPoint] += 1;
 
 		std::pair<T, T> edgePointPair(secondPoint, firstPoint);
 		edgeWeightTable[edgePointPair] = -1 * weight;
@@ -411,6 +412,65 @@ template <typename T> std::vector<T> LinkedGraph<T>::bidirectionalSearch(T start
 	return output;
 }
 
+template <typename T> std::pair<int, std::vector<T>> LinkedGraph<T>::heuristicSearch(T startPoint, T endPoint, double alpha)
+{
+	std::vector<T> pathVec;
+	int totalCost = 0;
+	std::map<std::pair<T, T>, int> costTable = getMultiSourceCost_(alpha);
+
+	std::queue<T> q;
+	std::map<T, bool> visitTable;
+	q.push(startPoint);
+	visitTable[startPoint] = true;
+	while (!q.empty())
+	{
+		T nowPoint = q.front();
+		if (nowPoint == endPoint)
+		{
+			pathVec.push_back(nowPoint);
+			break;
+		}
+		std::cout << nowPoint << std::endl;
+		pathVec.push_back(nowPoint);
+		q.pop();
+		auto allLinkedPoints = startPointContainer[nowPoint]->getAllElement();
+
+		T nextPoint;
+		int minCost = INT_MAX;
+		bool flag = false;
+		for (int i = 0; i < allLinkedPoints.size(); i++)
+		{
+			if (visitTable.find(allLinkedPoints[i]) != visitTable.end() && visitTable[allLinkedPoints[i]])
+			{
+				continue;
+			}
+			std::pair<T, T> startNowPair(startPoint, allLinkedPoints[i]);
+			std::pair<T, T> nowEndPair(allLinkedPoints[i], endPoint);
+			int cost = costTable[nowEndPair];
+			std::cout << "cost:" << cost << "   in:" << nowPoint << "  to  " << allLinkedPoints[i] << std::endl;
+			if (cost < minCost)
+			{
+				flag = true;
+				minCost = cost;
+				nextPoint = allLinkedPoints[i];
+			}
+		}
+
+		if (!flag)
+		{
+			continue;
+		}
+
+		q.push(nextPoint);
+		visitTable[nextPoint] = true;
+		std::pair<T, T> nowNextPair(nowPoint, nextPoint);
+		totalCost += std::abs(edgeWeightTable[nowNextPair]);
+	}
+
+	std::pair<int, std::vector<T>> output(totalCost, pathVec);
+	return output;
+}
+
 template <typename T> void LinkedGraph<T>::dfs_(T nextPoint, std::vector<T>& output, std::map<T, bool>& visitTable)
 {
 	auto isVisitIter = visitTable.find(nextPoint);
@@ -431,9 +491,8 @@ template <typename T> void LinkedGraph<T>::dfs_(T nextPoint, std::vector<T>& out
 
 template <typename T> int LinkedGraph<T>::geometryTriangleCost_(int costFirst, int costSecond, double alpha)
 {
-	int output= std::abs(costFirst - costSecond) +
-		static_cast<double>(std::abs(costFirst + costSecond) - std::abs(costFirst - costSecond))* alpha;
-	return output;
+	int output = std::pow(costFirst, 2) + std::pow(costSecond, 2) - 2 * costFirst * costSecond * cos(alpha);
+	return std::sqrt(output);
 }
 
 template <typename T> std::map<std::pair<T, T>, int> LinkedGraph<T>::getMultiSourceCost_(double alpha)
@@ -442,60 +501,59 @@ template <typename T> std::map<std::pair<T, T>, int> LinkedGraph<T>::getMultiSou
 	std::map<T, T> preMap;
 	std::map<T, bool> visitTable;
 
-	T pivotPoint = startPointContainer.begin()->first;
-	int maxLinkedNum = incomeTable[pivotPoint] + outTable[pivotPoint];
-	for (auto iter = startPointContainer.begin(); iter != startPointContainer.end(); iter++)
-	{
-		int linkedNum = incomeTable[iter->first] + outTable[iter->first];
-		if (linkedNum > maxLinkedNum)
-		{
-			maxLinkedNum = linkedNum;
-			pivotPoint = iter->first;
-		}
-	}
+	std::map<T, int> pivotPointMap;
+	std::vector<T> topoSortedVec = topologicalSort();
+	pivotPointMap[topoSortedVec[topoSortedVec.size() / 4]] = 1;
+	pivotPointMap[topoSortedVec[topoSortedVec.size() / 4 * 2]] = 1;
+	pivotPointMap[topoSortedVec[topoSortedVec.size() / 4 * 3]] = 1;
 
-	std::queue<T> q;
-	q.push(pivotPoint);
-	preMap[pivotPoint] = pivotPoint;
-	visitTable[pivotPoint] = true;
-	while (!q.empty())
+	for (auto iter = pivotPointMap.begin(); iter != pivotPointMap.end(); iter++)
 	{
-		T nowPoint = q.front();
-		q.pop();
-		auto allLinkedPoints = startPointContainer[nowPoint]->getAllElement();
-		for (int i = 0; i < allLinkedPoints.size(); i++)
+		T pivotPoint = iter->first;
+		std::cout << "pivot Point:" << pivotPoint << std::endl;
+		std::queue<T> q;
+		q.push(pivotPoint);
+		preMap[pivotPoint] = pivotPoint;
+		visitTable[pivotPoint] = true;
+		while (!q.empty())
 		{
-			if (visitTable.find(allLinkedPoints[i]) != visitTable.end() && visitTable[allLinkedPoints[i]] == true)
+			T nowPoint = q.front();
+			q.pop();
+			auto allLinkedPoints = startPointContainer[nowPoint]->getAllElement();
+			for (int i = 0; i < allLinkedPoints.size(); i++)
+			{
+				if (visitTable.find(allLinkedPoints[i]) != visitTable.end() && visitTable[allLinkedPoints[i]] == true)
+				{
+					continue;
+				}
+				q.push(allLinkedPoints[i]);
+				preMap[allLinkedPoints[i]] = nowPoint;
+				visitTable[allLinkedPoints[i]] = true;
+			}
+			if (nowPoint == pivotPoint)
 			{
 				continue;
 			}
-			q.push(allLinkedPoints[i]);
-			preMap[allLinkedPoints[i]] = nowPoint;
-			visitTable[allLinkedPoints[i]] = true;
-		}
-		if (nowPoint == pivotPoint)
-		{
-			continue;
-		}
 
-		std::pair<T, T> pairForward(pivotPoint, nowPoint);
-		std::pair<T, T> pairBackward(nowPoint, pivotPoint);
-		if (preMap[nowPoint] == pivotPoint)
-		{
-			int cost = std::abs(edgeWeightTable[pairForward]);
-			output[pairForward] = cost;
-			output[pairBackward] = cost;
-			continue;
-		}
+			std::pair<T, T> pairForward(pivotPoint, nowPoint);
+			std::pair<T, T> pairBackward(nowPoint, pivotPoint);
+			if (preMap[nowPoint] == pivotPoint)
+			{
+				int cost = std::abs(edgeWeightTable[pairForward]);
+				output[pairForward] = cost;
+				output[pairBackward] = cost;
+				continue;
+			}
 
-		T prePoint = preMap[nowPoint];
-		std::pair<T, T> prePivotPair(prePoint, pivotPoint);
-		std::pair<T, T> nowPrePair(nowPoint, prePoint);
-		int prePivotCost = output[prePivotPair];
-		int nowPreCost = std::abs(edgeWeightTable[nowPrePair]);
-		int nowPivotCost = geometryTriangleCost_(prePivotCost, nowPreCost, alpha);
-		output[pairForward] = nowPivotCost;
-		output[pairBackward] = nowPivotCost;
+			T prePoint = preMap[nowPoint];
+			std::pair<T, T> prePivotPair(prePoint, pivotPoint);
+			std::pair<T, T> nowPrePair(nowPoint, prePoint);
+			int prePivotCost = output[prePivotPair];
+			int nowPreCost = std::abs(edgeWeightTable[nowPrePair]);
+			int nowPivotCost = geometryTriangleCost_(prePivotCost, nowPreCost, alpha);
+			output[pairForward] = nowPivotCost;
+			output[pairBackward] = nowPivotCost;
+		}
 	}
 
 	for (auto outerIter = startPointContainer.begin(); outerIter != startPointContainer.end(); outerIter++)
@@ -505,22 +563,30 @@ template <typename T> std::map<std::pair<T, T>, int> LinkedGraph<T>::getMultiSou
 			std::pair<T, T> pairForward(innerIter->first, outerIter->first);
 			std::pair<T, T> pairBackward(outerIter->first, innerIter->first);
 
-			int cost = -1;
+			int finalCost = -1;
 			if (edgeWeightTable.find(pairForward) != edgeWeightTable.end())
 			{
-				cost = std::abs(edgeWeightTable[pairForward]);
+				finalCost = std::abs(edgeWeightTable[pairForward]);
 			}
 			else
 			{
-				std::pair<T, T> outerPivotPair(outerIter->first, pivotPoint);
-				std::pair<T, T> innerPivotPair(innerIter->first, pivotPoint);
-				int outerPivotCost = output[outerPivotPair];
-				int innerPivotCost = output[innerPivotPair];
-				cost = geometryTriangleCost_(outerPivotCost, innerPivotCost, alpha);
+				int totalCost = 0;
+				for (auto iter = pivotPointMap.begin(); iter != pivotPointMap.end(); iter++)
+				{
+					int cost = -1;
+					T pivotPoint = iter->first;
+					std::pair<T, T> outerPivotPair(outerIter->first, pivotPoint);
+					std::pair<T, T> innerPivotPair(innerIter->first, pivotPoint);
+					int outerPivotCost = output[outerPivotPair];
+					int innerPivotCost = output[innerPivotPair];
+					cost = geometryTriangleCost_(outerPivotCost, innerPivotCost, alpha) * iter->second;
+					totalCost += cost;
+				}
+				finalCost = totalCost / pivotPointMap.size();
 			}
 
-			output[pairForward] = cost;
-			output[pairBackward] = cost;
+			output[pairForward] = finalCost;
+			output[pairBackward] = finalCost;
 		}
 	}
 	return output;
