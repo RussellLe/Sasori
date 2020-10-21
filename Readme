@@ -32,6 +32,11 @@ graph.dfs--深度优先搜索
 graph.topologicalSort--有向拓扑序
 graph.miniSpanningTree--最小生成树
 graph.DijkstraPath--Dijkstra最短路径
+graph.bidirectionalSearch--双向搜索
+graph.heuristicSearch--启发式搜索
+
+【数学】
+math.fastPower--快速幂
 
 【其他】
 heap.Heap--二叉堆
