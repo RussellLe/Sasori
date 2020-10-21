@@ -32,6 +32,7 @@
     <ClInclude Include="src\graph.hpp" />
     <ClInclude Include="src\heap.hpp" />
     <ClInclude Include="src\linked_list.hpp" />
+    <ClInclude Include="src\math.hpp" />
     <ClInclude Include="src\scapegoat_tree.hpp" />
     <ClInclude Include="src\search.hpp" />
     <ClInclude Include="src\segment_tree.hpp" />

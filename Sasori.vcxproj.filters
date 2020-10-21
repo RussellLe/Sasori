@@ -13,6 +13,9 @@
     <Filter Include="src\graph">
       <UniqueIdentifier>{cfdefd88-6590-4c72-be1a-c97f506a20e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\math">
+      <UniqueIdentifier>{7ac22042-ac10-4abd-9058-0774cc2e24e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -67,6 +70,9 @@
     </ClInclude>
     <ClInclude Include="src\graph.hpp">
       <Filter>src\graph</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math.hpp">
+      <Filter>src\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
