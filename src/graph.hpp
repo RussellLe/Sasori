@@ -13,6 +13,7 @@ public:
 	bool addLink(T startPoint, T endPoint, int weight = 0);
 	bool unLink(T startPoint, T endPoint);
 	bool addTwowayLink(T firstPoint, T secondPoint, int weight = 0);
+	bool addFlow(T firstPoint, T secondPoint, int flow);
 	std::vector<T> bfs(T startPoint);
 	std::vector<T> dfs(T startPoint);
 	std::vector<T> topologicalSort();
@@ -20,16 +21,22 @@ public:
 	std::map<T, std::pair<int, std::vector<T>>> dijkstraPath(T startPoint);
 	std::vector<T> bidirectionalSearch(T startPoint, T endPoint);
 	std::pair<int, std::vector<T>> heuristicSearch(T startPoint, T endPoint, double alpha = 3);
+	int maximumFlow(T source, T sink);
+
+public:
+	bool isPointExist(T point);
 
 protected:
 	std::map<T, int> incomeTable;
 	std::map<T, int> outTable;
 	std::map<std::pair<T, T>, int> edgeWeightTable;
+	std::map<std::pair<T, T>, int> edgeFlowTable;
 
 public:
 	void dfs_(T nextPoint, std::vector<T>& output, std::map<T, bool>& visitTable);
 	std::map<std::pair<T, T>, int> getMultiSourceCost_(double alpha = 3);
 	int geometryTriangleCost_(int costFirst, int costSecond, double alpha);
+	bool dfsDinic_(T nowPoint, std::vector<T>& augPath, const std::map<std::pair<T, T>, int>& edgeResidueTable, const std::map<T, std::vector<T>>& levelLinkTable, const T& sink, int& minResidue);
 };
 
 template <typename T> LinkedGraph<T>::LinkedGraph()
@@ -72,6 +79,7 @@ template <typename T> bool LinkedGraph<T>::addLink(T startPoint, T endPoint, int
 
 	std::pair<T, T> edgePointPair(startPoint, endPoint);
 	edgeWeightTable[edgePointPair] = weight;
+	edgeFlowTable[edgePointPair] = 0;
 	return true;
 }
 
@@ -89,6 +97,7 @@ template <typename T> bool LinkedGraph<T>::unLink(T startPoint, T endPoint)
 
 	std::pair<T, T> edgePointPair(startPoint, endPoint);
 	edgeWeightTable.erase(edgePointPair);
+	edgeFlowTable.erase(edgePointPair);
 	return true;
 }
 
@@ -109,6 +118,7 @@ template <typename T> bool LinkedGraph<T>::addTwowayLink(T firstPoint, T secondP
 
 		std::pair<T, T> edgePointPair(firstPoint, secondPoint);
 		edgeWeightTable[edgePointPair] = weight;
+		edgeFlowTable[edgePointPair] = 0;
 	}
 	if (!secondIter->second->isNodeExist(firstPoint))
 	{
@@ -118,6 +128,26 @@ template <typename T> bool LinkedGraph<T>::addTwowayLink(T firstPoint, T secondP
 
 		std::pair<T, T> edgePointPair(secondPoint, firstPoint);
 		edgeWeightTable[edgePointPair] = -1 * weight;
+		edgeFlowTable[edgePointPair] = 0;
+	}
+	return true;
+}
+
+template <typename T> bool LinkedGraph<T>::addFlow(T firstPoint, T secondPoint, int flow)
+{
+	std::pair<T, T> edgeForwardPair(firstPoint, secondPoint);
+	std::pair<T, T> edgeBackwardPair(secondPoint, firstPoint);
+
+	edgeFlowTable[edgeForwardPair] += flow;
+	edgeFlowTable[edgeBackwardPair] -= flow;
+	return true;
+}
+
+template <typename T> bool LinkedGraph<T>::isPointExist(T point)
+{
+	if (startPointContainer.find(point) == startPointContainer.end())
+	{
+		return false;
 	}
 	return true;
 }
@@ -471,6 +501,74 @@ template <typename T> std::pair<int, std::vector<T>> LinkedGraph<T>::heuristicSe
 	return output;
 }
 
+template <typename T> int LinkedGraph<T>::maximumFlow(T source, T sink)
+{
+	int output = 0;
+
+	std::map<T, int> levelTable;
+	std::map<std::pair<T, T>, int> edgeResidueTable;
+	std::map<T, std::vector<T>> levelLinkTable;
+	
+	std::queue<T> q;
+	q.push(source);
+	levelTable[source] = 0;
+	while (!q.empty())
+	{
+		T nowPoint = q.front();
+		int nowLevel = levelTable[nowPoint];
+		q.pop();
+		std::vector<T> linkVec;
+
+		auto allLinkPoints = startPointContainer[nowPoint]->getAllElement();
+		for (int i = 1; i < allLinkPoints.size(); i++)
+		{
+			T nextPoint = allLinkPoints[i];
+			auto levelIter = levelTable.find(nextPoint);
+			if (levelIter == levelTable.end())
+			{
+				levelTable[nextPoint] = nowLevel + 1;
+			}
+			q.push(nextPoint);
+
+			std::pair<T, T> nowNextPair(nowPoint, nextPoint);
+			int residue = edgeWeightTable[nowNextPair] - edgeFlowTable[nowNextPair];
+			if (residue <= 0)
+			{
+				continue;
+			}
+			edgeResidueTable[nowNextPair] = residue;
+			linkVec.push_back(nextPoint);
+		}
+		levelLinkTable[nowPoint] = linkVec;
+	}
+
+	while (1)
+	{
+		T nowPoint = source;
+		std::vector<T> augPath;
+		augPath.push_back(nowPoint);
+		int minResidue = INT_MAX;
+
+		bool flag = dfsDinic_(nowPoint, augPath, edgeResidueTable, levelLinkTable, sink, minResidue);
+		if (!flag)
+		{
+			break;
+		}
+
+		//std::cout << "path:";
+		for (int i = 1; i < augPath.size(); i++)
+		{
+			//std::cout << augPath[i] << ' ';
+			std::pair<T, T> edgePair(augPath[i - 1], augPath[i]);
+			edgeResidueTable[edgePair] -= minResidue;
+		}
+		//std::cout << std::endl;
+		//std::cout << minResidue << std::endl;
+		output += minResidue;
+	}
+	return output;
+}
+
 template <typename T> void LinkedGraph<T>::dfs_(T nextPoint, std::vector<T>& output, std::map<T, bool>& visitTable)
 {
 	auto isVisitIter = visitTable.find(nextPoint);
@@ -590,4 +688,43 @@ template <typename T> std::map<std::pair<T, T>, int> LinkedGraph<T>::getMultiSou
 		}
 	}
 	return output;
+}
+
+template <typename T> bool LinkedGraph<T>::dfsDinic_(T nowPoint, std::vector<T>& augPath, const std::map<std::pair<T, T>, int>& edgeResidueTable, const std::map<T, std::vector<T>>& levelLinkTable, const T& sink, int& minResidue)
+{
+	bool flag = false;
+
+	if (nowPoint == sink)
+	{
+		return true;
+	}
+
+	auto linkVec = levelLinkTable.find(nowPoint)->second;
+	for (int i = 0; i < linkVec.size(); i++)
+	{
+		T nextPoint = linkVec[i];
+		std::pair<T, T> edgePair(nowPoint, nextPoint);
+		int residue = edgeResidueTable.find(edgePair)->second;
+
+		if (residue <= 0)
+		{
+			continue;
+		}
+		augPath.push_back(nextPoint);
+		flag = dfsDinic_(nextPoint, augPath, edgeResidueTable, levelLinkTable, sink, minResidue);
+
+		if (!flag)
+		{
+			augPath.pop_back();
+			continue;
+		}
+		
+		if (residue < minResidue)
+		{
+			minResidue = residue;
+		}
+
+		break;
+	}
+	return flag;
 }
